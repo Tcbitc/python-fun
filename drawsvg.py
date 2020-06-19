@@ -6,7 +6,7 @@
 # Source:
 # https://github.com/tfx2001/python-turtle-draw-svg/blob/master/main.py
 
-import re
+import re, sys
 import turtle as te
 from bs4 import BeautifulSoup
 
@@ -269,3 +269,10 @@ def drawSVG(filename, w_color):
     te.hideturtle()
     te.update()
     SVGFile.close()
+
+
+if __name__ == '__main__':
+    svgfile = sys.argv[1]
+    color = sys.argv[2] if len(sys.argv) > 2 else 'black'
+    drawSVG(svgfile, color)
+    input("Press RETURN to continue")

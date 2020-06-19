@@ -205,6 +205,18 @@ def drawSVG(filename, w_color):
             elif i == 'l':
                 Lineto_r(next(f) * scale[0], next(f) * scale[1])
                 lastI = i
+            elif i == 'H':
+                Lineto(next(f) * scale[0], te.ycor())
+                lastI = i
+            elif i == 'h':
+                Lineto_r(next(f) * scale[0], 0)
+                lastI = i
+            elif i == 'V':
+                Lineto(te.xcor(), next(f) * scale[1])
+                lastI = i
+            elif i == 'v':
+                Lineto_r(0, next(f) * scale[1])
+                lastI = i
             elif number(i) is None:
                 raise ValueError(f'Unsupported command: {i}')
             elif lastI == 'C':
@@ -225,6 +237,14 @@ def drawSVG(filename, w_color):
                 Lineto(i * scale[0], next(f) * scale[1])
             elif lastI == 'l':
                 Lineto_r(i * scale[0], next(f) * scale[1])
+            elif lastI == 'H':
+                Lineto(i * scale[0], te.ycor())
+            elif lastI == 'h':
+                Lineto_r(i * scale[0], 0)
+            elif lastI == 'V':
+                Lineto(te.xcor(), i * scale[1])
+            elif lastI == 'v':
+                Lineto_r(0, i * scale[1])
             else:
                 raise ValueError(f'Unexpected state: {lastI}')
     te.penup()

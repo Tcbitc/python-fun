@@ -6,6 +6,7 @@
 # Source:
 # https://github.com/tfx2001/python-turtle-draw-svg/blob/master/main.py
 
+import re
 import turtle as te
 from bs4 import BeautifulSoup
 
@@ -121,19 +122,23 @@ def transform(w_attr):
                      -float(func[func.find('(') + 1: -1].split(',')[1]))
 
 
+def number(s):
+    try:
+        return float(s)
+    except ValueError as err:
+        return None
+
+
 def readPathAttrD(w_attr):
-    ulist = w_attr.split(' ')
+    ulist = re.sub('  *', ' ', re.sub('([a-zA-Z])', ' \\1 ', w_attr.replace('-', ' -').replace(',', ' '))).strip().split(' ')
     for i in ulist:
-        # print("now cmd:", i)
-        if i.isdigit() or i.isalpha():
-            yield float(i)
-        elif i[0].isalpha():
-            yield i[0]
-            yield float(i[1:])
-        elif i[-1].isalpha():
-            yield float(i[0: -1])
-        elif i[0] == '-':
-            yield float(i)
+        if i.isalpha(): # Command
+            yield i
+        else: # Number, hopefully
+            num = number(i)
+            if num is None:
+                raise ValueError(f'Unsupported token: {i}')
+            yield num
 
 
 def drawSVG(filename, w_color):
@@ -182,6 +187,8 @@ def drawSVG(filename, w_color):
             elif i == 'l':
                 Lineto_r(next(f) * scale[0], next(f) * scale[1])
                 lastI = i
+            elif number(i) is None:
+                raise ValueError(f'Unsupported command: {i}')
             elif lastI == 'C':
                 Curveto(i * scale[0], next(f) * scale[1],
                         next(f) * scale[0], next(f) * scale[1],
@@ -194,6 +201,8 @@ def drawSVG(filename, w_color):
                 Lineto(i * scale[0], next(f) * scale[1])
             elif lastI == 'l':
                 Lineto_r(i * scale[0], next(f) * scale[1])
+            else:
+                raise ValueError(f'Unexpected state: {lastI}')
     te.penup()
     te.hideturtle()
     te.update()

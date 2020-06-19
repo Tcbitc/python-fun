@@ -1,0 +1,27 @@
+﻿import turtle
+a=turtle.Turtle(1)
+b=turtle.Turtle(2)
+c=turtle.Turtle(3)
+a.color("red")
+b.color("yellow")
+c.color("blue")
+b.left(120)
+c.right(120)
+def dunce():
+	a.forward(3)
+	b.forward(3)
+	c.forward(3)
+	for futureme in range(360):
+		a.left(3)
+		b.left(3)
+		c.left(3)
+		a.forward(2)
+		b.forward(2)
+		c.forward(2)
+dunce()
+for myself in range(100):
+	a.forward(3)
+	b.forward(3)
+	c.forward(3)
+	dunce()
+print("done!")

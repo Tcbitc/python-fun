@@ -8,12 +8,6 @@
 
 import turtle as te
 from bs4 import BeautifulSoup
-import argparse
-import sys
-import numpy as np
-import cv2
-import os
-from win32.win32api import GetSystemMetrics
 
 WriteStep = 15  # 贝塞尔函数的取样次数
 Speed = 1000
@@ -204,61 +198,3 @@ def drawSVG(filename, w_color):
     te.hideturtle()
     te.update()
     SVGFile.close()
-
-
-def drawBitmap(w_image):
-    print('Reducing the colors...')
-    Z = w_image.reshape((-1, 3))
-
-    # convert to np.float32
-    Z = np.float32(Z)
-
-    # define criteria, number of clusters(K) and apply kmeans()
-    criteria = (cv2.TERM_CRITERIA_EPS, 10, 1.0)
-    global K
-    ret, label, center = cv2.kmeans(
-        Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-
-    # Now convert back into uint8, and make original image
-    center = np.uint8(center)
-    res = center[label.flatten()]
-    res = res.reshape(w_image.shape)
-    no = 1
-    for i in center:
-        sys.stdout.write('\rDrawing: %.2f%% [' % (
-            no / K * 100) + '#' * no + ' ' * (K - no) + ']')
-        no += 1
-        res2 = cv2.inRange(res, i, i)
-        res2 = cv2.bitwise_not(res2)
-        cv2.imwrite('.tmp.bmp', res2)
-        os.system('potrace.exe .tmp.bmp -s --flat')
-        # print(i)
-        drawSVG('.tmp.svg', '#%02x%02x%02x' % (i[2], i[1], i[0]))
-    os.remove('.tmp.bmp')
-    os.remove('.tmp.svg')
-    print('\n\rFinished, close the window to exit.')
-    te.done()
-
-
-if __name__ == '__main__':
-    paser = argparse.ArgumentParser(
-        description="Convert an bitmap to SVG and use turtle libray to draw it.")
-    paser.add_argument('filename', type=str,
-                       help='The file(*.jpg, *.png, *.bmp) name of the file you want to convert.')
-    paser.add_argument(
-        "-c", "--color", help="How many colors you want to draw.(If the number is too large that the program may be very slow.)", type=int, default=32)
-    args = paser.parse_args()
-    K = args.color
-    try:
-        bitmapFile = open(args.filename, mode='r')
-    except FileNotFoundError:
-        print(__file__ + ': error: The file is not exists.')
-        quit()
-    if os.path.splitext(args.filename)[1].lower() not in ['.jpg', '.bmp', '.png']:
-        print(__file__ + ': error: The file is not a bitmap file.')
-        quit()
-    bitmap = cv2.imread(args.filename)
-    if bitmap.shape[0] > GetSystemMetrics(1):
-        bitmap = cv2.resize(bitmap, (int(bitmap.shape[1] * (
-            (GetSystemMetrics(1) - 50) / bitmap.shape[0])), GetSystemMetrics(1) - 50))
-    drawBitmap(bitmap)

@@ -245,6 +245,9 @@ def drawSVG(filename, w_color):
                 Lineto(te.xcor(), i * scale[1])
             elif lastI == 'v':
                 Lineto_r(0, i * scale[1])
+            # TODO:
+            # - Z/z to close the current path.
+            # - Q/q for quadratic bezier curve.
             else:
                 raise ValueError(f'Unexpected state: {lastI}')
     te.penup()

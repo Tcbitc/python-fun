@@ -96,8 +96,8 @@ def Curveto(x1, y1, x2, y2, x, y):
     Bezier_3(X_now, Y_now, x1, y1, x2, y2, x, y)
     global Xh
     global Yh
-    Xh = x - x2
-    Yh = y - y2
+    Xh = x + x - x2
+    Yh = y + y - y2
 
 
 def Curveto_r(x1, y1, x2, y2, x, y):
@@ -110,6 +110,16 @@ def Curveto_r(x1, y1, x2, y2, x, y):
     global Yh
     Xh = x - x2
     Yh = y - y2
+
+
+def SymmetricCurveto(x2, y2, x, y):
+    print(f'SymmetricCurveto({x2}, {y2}, {x}, {y})')
+    Curveto(Xh, Yh, x2, y2, x, y)
+
+
+def SymmetricCurveto_r(x2, y2, x, y):
+    print(f'SymmetricCurveto({x2}, {y2}, {x}, {y})')
+    Curveto_r(Xh, Yh, x2, y2, x, y)
 
 
 def transform(w_attr):
@@ -182,6 +192,14 @@ def drawSVG(filename, w_color):
                           next(f) * scale[0], next(f) * scale[1],
                           next(f) * scale[0], next(f) * scale[1])
                 lastI = i
+            elif i == 'S':
+                SymmetricCurveto(next(f) * scale[0], next(f) * scale[1],
+                                 next(f) * scale[0], next(f) * scale[1])
+                lastI = i
+            elif i == 's':
+                SymmetricCurveto_r(next(f) * scale[0], next(f) * scale[1],
+                                   next(f) * scale[0], next(f) * scale[1])
+                lastI = i
             elif i == 'L':
                 Lineto(next(f) * scale[0], next(f) * scale[1])
             elif i == 'l':
@@ -197,6 +215,12 @@ def drawSVG(filename, w_color):
                 Curveto_r(i * scale[0], next(f) * scale[1],
                           next(f) * scale[0], next(f) * scale[1],
                           next(f) * scale[0], next(f) * scale[1])
+            elif lastI == 'S':
+                SymmetricCurveto(i * scale[0], next(f) * scale[1],
+                                 next(f) * scale[0], next(f) * scale[1])
+            elif lastI == 's':
+                SymmetricCurveto_r(i * scale[0], next(f) * scale[1],
+                                   next(f) * scale[0], next(f) * scale[1])
             elif lastI == 'L':
                 Lineto(i * scale[0], next(f) * scale[1])
             elif lastI == 'l':

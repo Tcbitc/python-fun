@@ -170,7 +170,6 @@ def drawSVG(filename, w_color):
     global first
     SVGFile = open(filename, 'r')
     SVG = BeautifulSoup(SVGFile.read(), 'lxml')
-    print(SVG)
     try:
         Height = float(SVG.svg.attrs['height'][0: -2])
         Width = float(SVG.svg.attrs['width'][0: -2])

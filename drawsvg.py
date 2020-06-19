@@ -176,7 +176,10 @@ def drawSVG(filename, w_color):
     except:
         Height = 1000
         Width = 1000
-    transform(SVG.g.attrs['transform'])
+    try:
+        transform(SVG.g.attrs['transform'])
+    except:
+        pass
     if first:
         te.setup(height=Height, width=Width)
         te.setworldcoordinates(-Width / 2, 300, Width -

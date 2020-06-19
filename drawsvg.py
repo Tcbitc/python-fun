@@ -9,22 +9,22 @@
 import turtle as te
 from bs4 import BeautifulSoup
 
-WriteStep = 15  # 贝塞尔函数的取样次数
+WriteStep = 15
 Speed = 1000
-Width = 600  # 界面宽度
-Height = 600  # 界面高度
-Xh = 0  # 记录前一个贝塞尔函数的手柄
+Width = 600
+Height = 600
+Xh = 0
 Yh = 0
 scale = (1, 1)
 first = True
 K = 32
 
 
-def Bezier(p1, p2, t):  # 一阶贝塞尔函数
+def Bezier(p1, p2, t):
     return p1 * (1 - t) + p2 * t
 
 
-def Bezier_2(x1, y1, x2, y2, x3, y3):  # 二阶贝塞尔函数
+def Bezier_2(x1, y1, x2, y2, x3, y3):
     te.goto(x1, y1)
     te.pendown()
     for t in range(0, WriteStep + 1):
@@ -36,7 +36,7 @@ def Bezier_2(x1, y1, x2, y2, x3, y3):  # 二阶贝塞尔函数
     te.penup()
 
 
-def Bezier_3(x1, y1, x2, y2, x3, y3, x4, y4):  # 三阶贝塞尔函数
+def Bezier_3(x1, y1, x2, y2, x3, y3, x4, y4):
     x1 = -Width / 2 + x1
     y1 = Height / 2 - y1
     x2 = -Width / 2 + x2
@@ -44,7 +44,7 @@ def Bezier_3(x1, y1, x2, y2, x3, y3, x4, y4):  # 三阶贝塞尔函数
     x3 = -Width / 2 + x3
     y3 = Height / 2 - y3
     x4 = -Width / 2 + x4
-    y4 = Height / 2 - y4  # 坐标变换
+    y4 = Height / 2 - y4
     te.goto(x1, y1)
     te.pendown()
     for t in range(0, WriteStep + 1):
@@ -56,7 +56,7 @@ def Bezier_3(x1, y1, x2, y2, x3, y3, x4, y4):  # 三阶贝塞尔函数
     te.penup()
 
 
-def Moveto(x, y):  # 移动到svg坐标下（x，y）
+def Moveto(x, y):
     te.penup()
     te.goto(-Width / 2 + x, Height / 2 - y)
     te.pendown()
@@ -68,7 +68,7 @@ def Moveto_r(dx, dy):
     te.pendown()
 
 
-def line(x1, y1, x2, y2):  # 连接svg坐标下两点
+def line(x1, y1, x2, y2):
     te.penup()
     te.goto(-Width / 2 + x1, Height / 2 - y1)
     te.pendown()
@@ -76,19 +76,19 @@ def line(x1, y1, x2, y2):  # 连接svg坐标下两点
     te.penup()
 
 
-def Lineto_r(dx, dy):  # 连接当前点和相对坐标（dx，dy）的点
+def Lineto_r(dx, dy):
     te.pendown()
     te.goto(te.xcor() + dx, te.ycor() - dy)
     te.penup()
 
 
-def Lineto(x, y):  # 连接当前点和svg坐标下（x，y）
+def Lineto(x, y):
     te.pendown()
     te.goto(-Width / 2 + x, Height / 2 - y)
     te.penup()
 
 
-def Curveto(x1, y1, x2, y2, x, y):  # 三阶贝塞尔曲线到（x，y）
+def Curveto(x1, y1, x2, y2, x, y):
     te.penup()
     X_now = te.xcor() + Width / 2
     Y_now = Height / 2 - te.ycor()
@@ -99,7 +99,7 @@ def Curveto(x1, y1, x2, y2, x, y):  # 三阶贝塞尔曲线到（x，y）
     Yh = y - y2
 
 
-def Curveto_r(x1, y1, x2, y2, x, y):  # 三阶贝塞尔曲线到相对坐标（x，y）
+def Curveto_r(x1, y1, x2, y2, x, y):
     te.penup()
     X_now = te.xcor() + Width / 2
     Y_now = Height / 2 - te.ycor()

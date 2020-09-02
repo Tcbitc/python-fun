@@ -1,0 +1,42 @@
+import turtle
+t=turtle.Turtle()
+x=1
+a=1
+b=1
+t.hideturtle()
+for design in range(200):
+	a=x
+	b=x
+	t.tracer(0,0)
+	t.penup()
+	t.goto(a,b)
+	t.pendown()
+	t.color('green')
+	t.goto(a,-b)
+	t.goto(-a,-b)
+	t.goto(-a,b)
+	t.goto(a,b)
+	x=x+2
+	t.update()
+
+	t.tracer(0,0)
+	t.color('red')
+	a=-x
+	b=0
+	t.penup()
+	t.goto(a,b)
+	t.pendown()
+	a=0
+	b=x
+	t.goto(a,b)
+	a=x
+	b=0
+	t.goto(a,b)
+	a=0
+	b=-x
+	t.goto(a,b)
+	a=-x
+	b=0
+	t.goto(a,b)
+	x=x+2
+	t.update()

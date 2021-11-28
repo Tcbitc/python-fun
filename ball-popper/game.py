@@ -248,7 +248,7 @@ class Stopwatch:
         if self.running:
             self.elapsed = (time.time_ns() - self.initial) / 1000000000
         img = self.font.render(f'{self.elapsed:.3f}', True, WHITE)
-        screen.blit(img, (ww - img.get_width() - 20, 20))
+        screen.blit(img, (ww - img.get_width() - 20, 20)) # top right corner
 
 
 def main():

@@ -8,7 +8,7 @@ BLACK = (0, 0, 0)
 
 # Define some constants.
 fps = 60
-screen_scale = 3
+screen_scale = 2
 ww, wh = screen_scale*640, screen_scale*480
 gravity = 0.3
 bg_color = BLACK
@@ -205,7 +205,7 @@ class Ball(Poppable):
         Poppable.__init__(self, random.choice(ball_images))
 
         # GIANT BALLS OMG
-        self.scale(factor=2)
+        #self.scale(factor=2)
 
     def move(self):
         # Respond to the mouse's gravitational pull.

@@ -21,6 +21,8 @@ pygame.init()
 screen = pygame.display.set_mode((ww, wh))
 pygame.mouse.set_visible(False)
 gamespeed = 0
+grace_period = 3 # number of seconds of invincibility
+invincible = True
 
 # Load images.
 ball_files = [
@@ -147,7 +149,7 @@ class Poppable(Thing):
 
     def move(self):
         # If mouse is inside the poppable thing...
-        if self.rect.collidepoint(cursor.x, cursor.y):
+        if self.rect.collidepoint(cursor.x, cursor.y) and not invincible:
             self.dying = True
 
         if self.dying:
@@ -251,6 +253,26 @@ class Stopwatch:
         screen.blit(img, (ww - img.get_width() - 20, 20)) # top right corner
 
 
+class Countdown:
+    def __init__(self):
+        self.font = pygame.font.SysFont(None, 40 * screen_scale)
+        self.initial = None
+
+    def restart(self):
+        self.initial = time.time_ns()
+
+    @property
+    def remaining(self):
+        if self.initial is None: return -1
+        return grace_period - (time.time_ns() - self.initial) // 1000000000
+
+    def draw(self):
+        if self.initial is None: return
+        if self.remaining >= 0:
+            img = self.font.render(f'{self.remaining}', True, WHITE)
+            screen.blit(img, (20, 20)) # top left corner
+
+
 def main():
     # Start the music!
     # TODO: Why doesn't this work?
@@ -266,6 +288,7 @@ def main():
 
     clock = pygame.time.Clock()
     stopwatch = Stopwatch()
+    countdown = Countdown()
     objects = []
 
     def start_game(ball_count):
@@ -273,6 +296,7 @@ def main():
         objects.extend(walls)
         for i in range(ball_count): objects.append(Ball()) # balls to the walls!
         stopwatch.start()
+        countdown.restart()
 
     def quit_game():
         sys.exit()
@@ -285,6 +309,7 @@ def main():
         objects.append(Balloon("red", "15", [55, 80], lambda: start_game(15)))
         objects.append(Balloon("purple", "Quit", [55, 80], lambda: quit_game()))
         stopwatch.stop()
+        countdown.restart()
         gamespeed = 0
 
     title_screen()
@@ -293,6 +318,9 @@ def main():
         clock.tick(fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: quit_game()
+
+        global invincible
+        invincible = countdown.remaining > 0
 
         # move objects
         for obj in objects: obj.move()
@@ -314,6 +342,7 @@ def main():
         screen.fill(bg_color)
         cursor.draw()
         stopwatch.draw()
+        countdown.draw()
         for obj in objects: obj.draw()
         pygame.display.flip()
 

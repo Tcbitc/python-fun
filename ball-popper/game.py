@@ -11,6 +11,7 @@ fps = 60
 screen_scale = 2
 ww, wh = screen_scale*640, screen_scale*480
 gravity = 0.3
+maxspeed = 16
 bg_color = BLACK
 debug = False
 wireframe_color = YELLOW
@@ -19,6 +20,7 @@ wireframe_color = YELLOW
 pygame.init()
 screen = pygame.display.set_mode((ww, wh))
 pygame.mouse.set_visible(False)
+gamespeed = 0
 
 # Load images.
 ball_files = [
@@ -78,7 +80,14 @@ class Thing:
         return self.rect.y + self.rect.width / 2
 
     def accelerate(self, vector):
-        for i in range(self.dims): self.velocity[i] += vector[i]
+        for i in range(self.dims):
+            self.velocity[i] += vector[i]
+            currentmax = maxspeed + 10*gamespeed
+            if self.velocity[i] > currentmax:
+                self.velocity[i] = currentmax
+            if self.velocity[i] < -currentmax:
+                self.velocity[i] = -currentmax
+
 
     def move(self):
         # Move at the current trajectory.
@@ -276,6 +285,7 @@ def main():
         objects.append(Balloon("red", "15", [55, 80], lambda: start_game(15)))
         objects.append(Balloon("purple", "Quit", [55, 80], lambda: quit_game()))
         stopwatch.stop()
+        gamespeed = 0
 
     title_screen()
 
@@ -292,7 +302,10 @@ def main():
             obj1.collide(obj2)
 
         # remove dead objects
+        oldcount = len(objects)
         objects = [obj for obj in objects if obj.alive]
+        global gamespeed
+        gamespeed += oldcount - len(objects)
         if len(objects) <= len(walls):
             # No more objects left. Game over!
             title_screen()

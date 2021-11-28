@@ -97,7 +97,7 @@ class Thing:
     def _bounce(m1, m2, v1, v2):
         # Conservation of momentum: m1*v1 + m2*v2 = m1*nv1 + m2*nv2
         # where m is mass, v is current velocity, and nv is new velocity
-        # -> nv1 = [2*m2*v2 + v1*(m1 – m2)] / (m1 + m2)
+        # -> nv1 = [2*m2*v2 + v1*(m1 - m2)] / (m1 + m2)
         # -> nv2 = [2*m1*v1 + v2*(m2 - m1)] / (m1 + m2)
         # Credit: https://www.toppr.com/guides/physics/work-energy-and-power/collisions/
         return [(2*m2*v2[i] + v1[i]*(m1 - m2)) / (m1 + m2) for i in range(len(v1))]
